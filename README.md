@@ -13,6 +13,9 @@ To use:
 
 
 Dependencies:
-opencv-python
-numpy
-ImageAI
+
+-opencv-python
+
+-numpy
+
+-ImageAI
