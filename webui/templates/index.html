@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body_block %}
+<h1>Connected</h1>
+
+<div class="container-fluid">
+  <div class="jumbotron">
+    <form class="form" method="post">
+      <div class="form-group">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" name="submit" class="btn btn-primary btn-lg" value="Submit">
+      </div>
+    </form>
+    <input type="button" name="test" class = "btn btn-secondary btn-lg" value="Test VideoFeed (Not Functioning)" onclick="">
+  </div>
+</div>
+{% endblock %}

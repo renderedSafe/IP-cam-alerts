@@ -18,7 +18,7 @@ import configparser
 ############################################################################
 #######################Configuring settings from config.ini#################
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('webui/config.ini') #might work
 
 # Settings for the motion detector
 HISTORY = int(config['settings']['md_history'])
@@ -94,7 +94,7 @@ def sendAlertEmail(image_list, detections):
     msg = MIMEMultipart()
     msg['Subject'] = 'Object of interest detected'
     msg['From'] = username
-    msg['To'] = ALERT_ADRESS
+    msg['To'] = ALERT_ADDRESS
 
     msg_text = MIMEText(f'Objects detected:{detections}')
     msg.attach(msg_text)
