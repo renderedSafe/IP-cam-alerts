@@ -31,6 +31,7 @@ OD_INTERVAL = int(config['settings']['od_frames'])
 # TODO: Unfuck this. split this value into username, password, and IP, then concat so we can grab the password securely
 CAMERA_IP_ADDRESS = config['settings']['camera_IP']
 ALERT_ADDRESS = config['settings']['alert_address']
+NOTIFY = config['settings']['notify']
 #############################################################################
 
 

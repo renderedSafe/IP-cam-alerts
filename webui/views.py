@@ -13,7 +13,8 @@ def index(request):
                        'BASE_MOVEMENT_THRESHOLD': int(config['settings']['movement_detection_threshold']),
                         'OD_INTERVAL': int(config['settings']['od_frames']),
                         'CAMERA_IP_ADDRESS': config['settings']['camera_IP'],
-                        'ALERT_ADDRESS': config['settings']['alert_address']}
+                        'ALERT_ADDRESS': config['settings']['alert_address'],
+                        'NOTIFY': config['settings']['notify']}
 
         form = ConfigForm(initial=config_dict)
 
@@ -27,7 +28,8 @@ def index(request):
             config.set('settings', 'movement_detection_threshold', str(form.cleaned_data['BASE_MOVEMENT_THRESHOLD']))
             config.set('settings', 'od_frames', str(form.cleaned_data['OD_INTERVAL']))
             config.set('settings', 'camera_IP', form.cleaned_data['CAMERA_IP_ADDRESS'])
-            config.set('settings', 'alert_address', form.cleaned_data['alert_address'])
+            config.set('settings', 'alert_address', form.cleaned_data['ALERT_ADDRESS'])
+            config.set('settings', 'notify', str(form.cleaned_data['NOTIFY']))
 
             with open('webui/config.ini', 'w') as configfile:
                 config.write(configfile)
