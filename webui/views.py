@@ -22,10 +22,10 @@ def index(request):
 
         print(form.is_valid())
         if form.is_valid():
-            config.set('settings', 'md_history', form.cleaned_data['HISTORY'])
-            config.set('settings', 'md_threshold', form.cleaned_data['THRESHOLD'])
-            config.set('settings', 'movement_detection_threshold', form.cleaned_data['BASE_MOVEMENT_THRESHOLD'])
-            config.set('settings', 'od_frames', form.cleaned_data['OD_INTERVAL'])
+            config.set('settings', 'md_history', str(form.cleaned_data['HISTORY'])
+            config.set('settings', 'md_threshold', str(form.cleaned_data['THRESHOLD']))
+            config.set('settings', 'movement_detection_threshold', str(form.cleaned_data['BASE_MOVEMENT_THRESHOLD']))
+            config.set('settings', 'od_frames', str(form.cleaned_data['OD_INTERVAL']))
             config.set('settings', 'camera_IP', form.cleaned_data['CAMERA_IP_ADDRESS'])
             config.set('settings', 'alert_address', form.cleaned_data['alert_address'])
 
