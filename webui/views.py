@@ -22,7 +22,7 @@ def index(request):
 
         print(form.is_valid())
         if form.is_valid():
-            config.set('settings', 'md_history', str(form.cleaned_data['HISTORY'])
+            config.set('settings', 'md_history', str(form.cleaned_data['HISTORY']))
             config.set('settings', 'md_threshold', str(form.cleaned_data['THRESHOLD']))
             config.set('settings', 'movement_detection_threshold', str(form.cleaned_data['BASE_MOVEMENT_THRESHOLD']))
             config.set('settings', 'od_frames', str(form.cleaned_data['OD_INTERVAL']))
