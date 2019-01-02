@@ -93,8 +93,8 @@ def sendAlertEmail(image_list, detections):
 
     msg = MIMEMultipart()
     msg['Subject'] = 'Object of interest detected'
-    msg['From'] = 'jensonalerts@gmail.com'
-    msg['To'] = '7604206116@msg.fi.google.com'
+    msg['From'] = username
+    msg['To'] = ALERT_ADRESS
 
     msg_text = MIMEText(f'Objects detected:{detections}')
     msg.attach(msg_text)
