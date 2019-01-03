@@ -1,6 +1,7 @@
 # IP-cam-alerts
 IP camera motion SMS alerts screened with object detection to reduce false-positives. 
 
+Forked from @renderedSafe in order to add Django web interface for streamlining configuaration and setup
 
 This program works by grabbing frames continuously from an IP camera in a parallel loop, and checks the most recent frame for motion every half-second. If and when it detects motion, it runs a set number of subsequent frames through an object detector, and if it detects a person, it sends a text or email with images of each frame that had a person in it attached. 
 
@@ -19,3 +20,7 @@ Dependencies:
 -numpy
 
 -ImageAI
+
+For django requirements:
+cd to ip-cam-alerts
+pip install -r requiremennts.txt
