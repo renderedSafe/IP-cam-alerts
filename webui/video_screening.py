@@ -18,6 +18,7 @@ import configparser
 ##################################################################################
 #######################Configuring settings from config.ini#######################
 ## This step is now done in the main function, variables are declared as global ##
+"""
 config = configparser.ConfigParser()
 config.read('webui/config.ini') #might work
 
@@ -36,6 +37,7 @@ OD_INTERVAL = int(config['settings']['od_frames'])
 CAMERA_IP_ADDRESS = config['settings']['camera_IP']
 ALERT_ADDRESS = config['settings']['alert_address']
 NOTIFY = config['settings']['notify']
+"""
 ##################################################################################
 ##################################################################################
 
@@ -169,18 +171,26 @@ def main():
     config = configparser.ConfigParser()
     config.read('webui/config.ini') #might work
 
+    global HISTORY
+    global THRESHOLD
+    global BASE_MOVEMENT_THRESHOLD
+    global OD_INTERVAL
+    global CAMERA_IP_ADDRESS
+    global ALERT_ADDRESS
+    global NOTIFY
+
     # Settings for the motion detector
-    global HISTORY = int(config['settings']['md_history'])
-    global THRESHOLD = int(config['settings']['md_threshold'])
+    HISTORY = int(config['settings']['md_history'])
+    THRESHOLD = int(config['settings']['md_threshold'])
     # Threshold number for movement to be detected
-    global BASE_MOVEMENT_THRESHOLD = int(config['settings']['movement_detection_threshold'])
+    BASE_MOVEMENT_THRESHOLD = int(config['settings']['movement_detection_threshold'])
     # Number of frames to detect objects in after movement is first detected
-    global OD_INTERVAL = int(config['settings']['od_frames'])
+    OD_INTERVAL = int(config['settings']['od_frames'])
     #IP address of the camera
     # TODO: Unfuck this. split this value into username, password, and IP, then concat so we can grab the password securely
-    global CAMERA_IP_ADDRESS = config['settings']['camera_IP']
-    global ALERT_ADDRESS = config['settings']['alert_address']
-    global NOTIFY = config['settings']['notify']
+    CAMERA_IP_ADDRESS = config['settings']['camera_IP']
+    ALERT_ADDRESS = config['settings']['alert_address']
+    NOTIFY = config['settings']['notify']
 
     """
     Send this information from the login form
@@ -206,7 +216,7 @@ def main():
 
     # setting up the queue that will be used to get data from the stream processing
     frame_queue = Queue(maxsize=10)
-    
+
     # starting the stream processing multiprocess
     stream_process = Process(target=getFrames, args=(frame_queue,))
     stream_process.start()
