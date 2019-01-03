@@ -21,6 +21,7 @@ def index(request):
 
     elif request.method == "POST":
         form = ConfigForm(request.POST)
+        logform = SmptForm(request.POST)
 
         print(form.is_valid())
         if form.is_valid():
