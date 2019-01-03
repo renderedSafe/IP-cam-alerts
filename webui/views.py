@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import ConfigForm
+from .forms import ConfigForm, SmptForm
 import configparser
 
 # Create your views here.
@@ -17,6 +17,7 @@ def index(request):
                         'NOTIFY': config['settings']['notify']}
 
         form = ConfigForm(initial=config_dict)
+        logform = SmptForm()
 
     elif request.method == "POST":
         form = ConfigForm(request.POST)
@@ -37,7 +38,7 @@ def index(request):
         #if form.is_valid():
 
 
-    return render(request, 'index.html', {'form': form})
+    return render(request, 'index.html', {'form': form, 'logform': logform})
 
 #def run_analyzer(request):
     #run analyzer here

@@ -2,9 +2,9 @@
 {% load crispy_forms_tags %}
 
 {% block body_block %}
-<h1>Connected</h1>
-
 <div class="container-fluid">
+  <h1 align="Center">IP Cam Alerts Config</h1>
+
   <div class="jumbotron">
     <form class="form" method="post">
       <div class="form-group">
@@ -14,6 +14,16 @@
       </div>
     </form>
     <input type="button" name="test" class = "btn btn-secondary btn-lg" value="Test VideoFeed (Not Functioning)" onclick="">
+  </div>
+  <div class="jumbotron">
+    <h3>Login to send notifications</h3>
+    <form class="form" method="post">
+      <div class="form-group">
+        {% csrf_token %}
+        {{ logform|crispy }}
+        <input type="submit" name="submit" class="btn btn-primary btn-lg" value="Submit">
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

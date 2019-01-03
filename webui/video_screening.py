@@ -125,9 +125,9 @@ def objectDetectionLoop(frame):
         print(f'Detection  on frame #{i+1}')
         if 'person' in detection_list:  # If there were any objects detected in that frame we shrink it and add it to the list
             image_list.append(detection_image)
+            
     # If any images were added to the list, that means things were detected, and you should send the alert
-    if image_list:
-
+    if image_list and NOTIFY == "True":
         print(f'Sending alert email with {len(image_list)} images attached')
         sendAlertEmail(image_list, set(total_detections))  #converting list to set to only send unique items
 
@@ -177,7 +177,9 @@ def main():
     global ALERT_ADDRESS = config['settings']['alert_address']
     global NOTIFY = config['settings']['notify']
 
-    #print('Enter login information for the email to use for sending alerts...')
+    #
+    # Send this information from the login form
+    #
     #username = input('Email address for sending email: ')
     #password = input('Password:')
 
@@ -190,7 +192,7 @@ def main():
     detector.loadModel(detection_speed='fast')
     bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=HISTORY,
                                                        varThreshold=THRESHOLD)  # includes params from settings
-    if notify == "True":
+    if notify == "True": #Might have to state that notify is a string
         email_server = smtplib.SMTP('smtp.gmail.com', 587)
         email_server.starttls()
         email_server.login(username, password)
