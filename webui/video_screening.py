@@ -15,24 +15,29 @@ import getpass
 from multiprocessing import Process, Queue
 import configparser
 
-############################################################################
-#######################Configuring settings from config.ini#################
+##################################################################################
+#######################Configuring settings from config.ini#######################
+## This step is now done in the main function, variables are declared as global ##
 config = configparser.ConfigParser()
 config.read('webui/config.ini') #might work
 
 # Settings for the motion detector
 HISTORY = int(config['settings']['md_history'])
 THRESHOLD = int(config['settings']['md_threshold'])
+
 # Threshold number for movement to be detected
 BASE_MOVEMENT_THRESHOLD = int(config['settings']['movement_detection_threshold'])
+
 # Number of frames to detect objects in after movement is first detected
 OD_INTERVAL = int(config['settings']['od_frames'])
+
 #IP address of the camera
 # TODO: Unfuck this. split this value into username, password, and IP, then concat so we can grab the password securely
 CAMERA_IP_ADDRESS = config['settings']['camera_IP']
 ALERT_ADDRESS = config['settings']['alert_address']
 NOTIFY = config['settings']['notify']
-#############################################################################
+##################################################################################
+##################################################################################
 
 
 
@@ -125,7 +130,7 @@ def objectDetectionLoop(frame):
         print(f'Detection  on frame #{i+1}')
         if 'person' in detection_list:  # If there were any objects detected in that frame we shrink it and add it to the list
             image_list.append(detection_image)
-            
+
     # If any images were added to the list, that means things were detected, and you should send the alert
     if image_list and NOTIFY == "True":
         print(f'Sending alert email with {len(image_list)} images attached')
@@ -177,9 +182,11 @@ def main():
     global ALERT_ADDRESS = config['settings']['alert_address']
     global NOTIFY = config['settings']['notify']
 
-    #
-    # Send this information from the login form
-    #
+    """
+    Send this information from the login form
+    Will need to store securely
+    maybe in a model
+    """
     #username = input('Email address for sending email: ')
     #password = input('Password:')
 
@@ -199,6 +206,7 @@ def main():
 
     # setting up the queue that will be used to get data from the stream processing
     frame_queue = Queue(maxsize=10)
+    
     # starting the stream processing multiprocess
     stream_process = Process(target=getFrames, args=(frame_queue,))
     stream_process.start()
