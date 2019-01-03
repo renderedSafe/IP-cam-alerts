@@ -22,5 +22,7 @@ Dependencies:
 -ImageAI
 
 For django requirements:
+
 cd to ip-cam-alerts
+
 pip install -r requiremennts.txt
