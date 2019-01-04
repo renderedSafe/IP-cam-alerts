@@ -1,11 +1,10 @@
 from django.test import TestCase
-from video_screening.py import main
 
 # Create your tests here.
 
 def test_main():
     from video_screening.py import main
-    
+
     print("Calling main...")
     main()
     print("Main called successfully")
@@ -25,5 +24,13 @@ def test_configparser():
     config = configparser.ConfigParser()
     config.read('webui/config.ini')
 
+def test_varscope():
+    print(test_var())
+
+def test_var():
+    A=1
+    return A
+
 #test_configparser()
-main()
+#main()
+test_varscope()
