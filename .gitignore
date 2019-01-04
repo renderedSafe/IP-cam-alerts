@@ -1,0 +1,3 @@
+*.pyc
+tests.py
+db.sqlite3
