@@ -167,6 +167,11 @@ def analyzeVideo():
             break
         time.sleep(.5)
 
+def signin(username,password):
+    email_server = smtplib.SMTP('smtp.gmail.com', 587)
+    email_server.starttls()
+    email_server.login(username, password)
+
 def main():
     config = configparser.ConfigParser()
     config.read('webui/config.ini') #might work
@@ -209,10 +214,8 @@ def main():
     detector.loadModel(detection_speed='fast')
     bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=HISTORY,
                                                        varThreshold=THRESHOLD)  # includes params from settings
-    if notify == "True": #Might have to state that notify is a string
-        email_server = smtplib.SMTP('smtp.gmail.com', 587)
-        email_server.starttls()
-        email_server.login(username, password)
+    if notify == "True": #Might have to state that notify is a string, not able to test this
+        signin(username, password)
 
     # setting up the queue that will be used to get data from the stream processing
     frame_queue = Queue(maxsize=10)
@@ -221,4 +224,5 @@ def main():
     stream_process = Process(target=getFrames, args=(frame_queue,))
     stream_process.start()
 
+    print("Main passed")
     analyzeVideo()
