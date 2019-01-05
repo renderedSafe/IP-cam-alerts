@@ -14,6 +14,7 @@ import io
 import getpass
 from multiprocessing import Process, Queue
 import configparser
+from ast import literal_eval
 
 ############################################################################
 #######################Configuring settings from config.ini#################
@@ -27,9 +28,16 @@ THRESHOLD = int(config['settings']['md_threshold'])
 BASE_MOVEMENT_THRESHOLD = int(config['settings']['movement_detection_threshold'])
 # Number of frames to detect objects in after movement is first detected
 OD_INTERVAL = int(config['settings']['od_frames'])
+# Object detection model configuration
+# TODO: Add these settings into config.ini and use settings in program
+DETECTOR_MODEL = config['settings']['od_model']
+DETECTION_SPEED = config['settings']['od_speed']
+OBJECT_DETECTION_CONFIDENCE_THRESHOLD = config['settings']['od_confidence_threshold']
+IMAGE_PROCESSING_RESOLUTION = config['settings']['image_processing_resolution']
 #IP address of the camera
 # TODO: Unfuck this. split this value into username, password, and IP, then concat so we can grab the password securely
 CAMERA_IP_ADDRESS = config['settings']['camera_IP']
+# The address to send alerts to
 ALERT_ADDRESS = config['settings']['alert_address']
 #############################################################################
 
@@ -76,11 +84,9 @@ def findObjects(frame):
     :return (debugging_image, objects_detected): a tuple, (<a numpy array image with detections>,
                                                             <a list of objects detected >).
     """
-    #smaller image makes for faster detection
-    frame = cv2.resize(frame, (640, 360))
     start_time = time.time()
     debugging_image, detections = detector.detectObjectsFromImage(frame, input_type="array", output_type="array",
-                                                                 minimum_percentage_probability=40)
+                                                                 minimum_percentage_probability=OBJECT_DETECTION_CONFIDENCE_THRESHOLD)
     objects_detected = [item['name'] for item in detections]
     print(f'Detected the following objects: {objects_detected}')
     finish_time = time.time()
@@ -136,6 +142,7 @@ def analyzeVideo():
     while True:
         #cv2.imshow('image', frame)
         frame = frame_queue.get()
+        frame = cv2.resize(frame, literal_eval(IMAGE_PROCESSING_RESOLUTION))
 
         fps = 1 / (time.time() - start_time)
         start_time = time.time()
@@ -167,9 +174,16 @@ if __name__ == '__main__':
 
     # setting up the object detector
     detector = ObjectDetection()
-    detector.setModelTypeAsYOLOv3()
-    detector.setModelPath(os.path.join('models', 'yolo.h5'))
-    detector.loadModel(detection_speed='fast')
+
+    # Configure the detector based on the settings in config.ini
+    if DETECTOR_MODEL == 'yolo':
+        detector.setModelTypeAsYOLOv3()
+        detector.setModelPath(os.path.join('models', 'yolo.h5'))
+    else:
+        detector.setModelTypeAsTinyYOLOv3()
+        detector.setModelPath(os.path.join('models', 'yolo-tiny.h5'))
+
+    detector.loadModel(detection_speed=DETECTION_SPEED)
     bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=HISTORY,
                                                        varThreshold=THRESHOLD)  # includes params from settings
 
