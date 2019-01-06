@@ -14,7 +14,7 @@ Easy way for Windows users:
 
 1. Download the windows-executable folder
 2. Open config.ini with a text editor. Go to the bottom of the file and find the spots for the alert address and IP camera address and add that info in. For an IP camera, Google how to find the RTSP address for your camera and put that address in the spot for the camera address. Save the file
-3. Download one of the YOLO models from this link: https://github.com/OlafenwaMoses/ImageAI/releases/tag/1.0/. Add it into the models folder of the windows-executable directory you downloaded. (The default model for the program is yolo-tiny.h5, so unless you change it in config.ini, use that one).
+3. ~~Download one of the YOLO models from this link: https://github.com/OlafenwaMoses/ImageAI/releases/tag/1.0/. Add it into the models folder of the windows-executable directory you downloaded. (The default model for the program is yolo-tiny.h5, so unless you change it in config.ini, use that one).~~ Model files now included. No step needed here.
 4. Run video_screening.exe. A terminal window should appear. Follow the prompts, the email you enter will be the one from which the alerts are sent. 
 5. Sit back and wait for the alert texts. 
 
