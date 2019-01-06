@@ -1,1 +1,2 @@
 windows-executable/video_screening.exe filter=lfs diff=lfs merge=lfs -text
+windows-executable/models/*.h5 filter=lfs diff=lfs merge=lfs -text
