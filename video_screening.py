@@ -12,7 +12,7 @@ from email.message import EmailMessage
 from PIL import Image
 import io
 import getpass
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, freeze_support
 import configparser
 from ast import literal_eval
 
@@ -44,23 +44,17 @@ ALERT_ADDRESS = config['settings']['alert_address']
 
 def getFrames(q):
     """
-    This function is meant to be run as a multiprocessing Process object
+    This function is meant to be run as a multiprocessing Process object. Grabs frames from the video capture object
+    and stores them in the queue for access outside this process
     :param q: multiprocessing.Queue object
-    :return: access q from outside funtction
+    :return: access q from outside function
     """
     cap = cv2.VideoCapture(CAMERA_IP_ADDRESS)
-    frame_time = time.time()
     while True:
         ret, frame = cap.read()
         if q.qsize() >= 5:
             q.get()
-
         q.put(frame)
-        # try:
-        #     print(f'Frames grabbed per second: {1 / (time.time() - frame_time)}')
-        # except ZeroDivisionError as e:
-        #     print(e)
-        frame_time = time.time()
 
 def detectMovement(frame):
     """
@@ -86,7 +80,7 @@ def findObjects(frame):
     """
     start_time = time.time()
     debugging_image, detections = detector.detectObjectsFromImage(frame, input_type="array", output_type="array",
-                                                                 minimum_percentage_probability=OBJECT_DETECTION_CONFIDENCE_THRESHOLD)
+                                                                 minimum_percentage_probability=int(OBJECT_DETECTION_CONFIDENCE_THRESHOLD))
     objects_detected = [item['name'] for item in detections]
     print(f'Detected the following objects: {objects_detected}')
     finish_time = time.time()
@@ -133,19 +127,21 @@ def objectDetectionLoop(frame):
     if image_list:
 
         print(f'Sending alert email with {len(image_list)} images attached')
-        sendAlertEmail(image_list, set(total_detections))  #converting list to set to only send unique items
+        sendAlertEmail(image_list, total_detections)  #converting list to set to only send unique items
+
 
 def analyzeVideo():
     # let's just grab the first frame before things get ahead of themselves
     ret, frame = cap.read()
     start_time = time.time()
     while True:
-        #cv2.imshow('image', frame)
+        cv2.imshow('image', frame)
         frame = frame_queue.get()
         frame = cv2.resize(frame, literal_eval(IMAGE_PROCESSING_RESOLUTION))
 
         fps = 1 / (time.time() - start_time)
         start_time = time.time()
+        #print(f'FPS: {fps}')
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         cv2.putText(frame, f'FPS: {int(fps)}', (0, 30), font, 1, (200, 255, 155), 2, cv2.LINE_AA)
@@ -166,6 +162,7 @@ def analyzeVideo():
         #time.sleep(.5)
 
 if __name__ == '__main__':
+    freeze_support()  #Need this to be able to use MP in a standalone package
     print('Enter login information for the email to use for sending alerts...')
     username = input('Email address for sending email: ')
     password = input('Password:')
@@ -174,27 +171,36 @@ if __name__ == '__main__':
 
     # setting up the object detector
     detector = ObjectDetection()
-
+    print('Setting up detector')
     # Configure the detector based on the settings in config.ini
     if DETECTOR_MODEL == 'yolo':
+        print('YOLO chosen')
         detector.setModelTypeAsYOLOv3()
         detector.setModelPath(os.path.join('models', 'yolo.h5'))
     else:
+        print('Tiny-YOLO chosen')
         detector.setModelTypeAsTinyYOLOv3()
         detector.setModelPath(os.path.join('models', 'yolo-tiny.h5'))
 
+    print('Loading model')
     detector.loadModel(detection_speed=DETECTION_SPEED)
+    print('Creating BG subtractor')
     bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=HISTORY,
                                                        varThreshold=THRESHOLD)  # includes params from settings
 
+    print('Starting email server')
     email_server = smtplib.SMTP('smtp.gmail.com', 587)
     email_server.starttls()
+    print('Logging in')
     email_server.login(username, password)
-
+    print('Logged in')
     # setting up the queue that will be used to get data from the stream processing
     frame_queue = Queue(maxsize=10)
     # starting the stream processing multiprocess
+    print('Setting up process')
     stream_process = Process(target=getFrames, args=(frame_queue,))
+    print('Starting process')
     stream_process.start()
-
+    print('Process started')
+    print('Analyzing video...')
     analyzeVideo()
