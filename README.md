@@ -4,6 +4,8 @@ IP camera motion SMS alerts screened with object detection to reduce false-posit
 
 This program works by grabbing frames continuously from an IP camera in a parallel loop, and checks the most recent frame for motion every half-second. If and when it detects motion, it runs a set number of subsequent frames through an object detector, and if it detects a person, it sends a text or email with images of each frame that had a person in it attached.
 
+!['Demo text alert image](https://github.com/renderedSafe/IP-cam-alerts/blob/master/Screenshot_20190105-223219.png?raw=true)
+
 The sensetivity of the motion detector and the number of frames to run object detection on post motion-detection are configurable in the config file.
 
 To use:
