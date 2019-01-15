@@ -24,7 +24,7 @@ For other users/those who just want to run the Python script:
 1. Add an address for an IP camera in the spot for it in the config.ini
 2. Add an address to send alerts to in the same file
 3. Add a directory named 'models', and in it put the YOLOv3 and/or yolo-tiny model you can download here (yolo-tiny is set as default in config.ini. You can change that): https://github.com/OlafenwaMoses/ImageAI/releases/tag/1.0/
-(Or just copy the models diectory into the base directory, it has the model files in it.)
+(Or just copy the models directory into the base directory, it has the model files in it.)
 
 (Freeze support is enabled in the script, but you may need to add the ffmpeg .dll file from the cv2 site package in your python directory. See this SO question: https://stackoverflow.com/questions/44415424/videocapture-opencv-python-pyinstaller-not-opening.)
 
